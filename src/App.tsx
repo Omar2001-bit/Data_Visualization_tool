@@ -537,7 +537,7 @@ function App() {
   }, [shouldUsePeriodComparison, visibleDatasetsWithData.length]);
   
   // Filter data by date range first, then aggregate
-  const filteredDatasets = currentDatasets
+  const filteredDatasets = (currentDatasets && Array.isArray(currentDatasets) ? currentDatasets : [])
     .filter(dataset => {
       if (!dataset || !dataset.data || !Array.isArray(dataset.data)) {
         console.warn('Filtering out invalid dataset:', dataset?.label || 'unknown');
@@ -563,7 +563,7 @@ function App() {
     });
   
   // Aggregate data based on selected time view
-  const aggregatedDatasets = filteredDatasets
+  const aggregatedDatasets = (filteredDatasets && Array.isArray(filteredDatasets) ? filteredDatasets : [])
     .filter(dataset => {
       if (!dataset || !dataset.data || !Array.isArray(dataset.data)) {
         console.warn('Filtering out invalid dataset for aggregation:', dataset?.label || 'unknown');
@@ -1133,10 +1133,10 @@ function App() {
               </div>
             ) : (
               <DataChart
-                datasets={aggregatedDatasets.filter((_, i) => {
+                datasets={aggregatedDatasets && Array.isArray(aggregatedDatasets) ? aggregatedDatasets.filter((_, i) => {
                   const originalIndex = allDatasets.findIndex(d => d.label === aggregatedDatasets[i].label);
                   return visibleDatasets[originalIndex];
-                })}
+                }) : []}
                 timeView={timeView} 
                 colorPeriods={colorPeriods}
               />
@@ -1169,10 +1169,10 @@ function App() {
               </div>
             ) : (
               <DataTable
-                datasets={aggregatedDatasets.filter((_, i) => {
+                datasets={aggregatedDatasets && Array.isArray(aggregatedDatasets) ? aggregatedDatasets.filter((_, i) => {
                   const originalIndex = allDatasets.findIndex(d => d.label === aggregatedDatasets[i].label);
                   return visibleDatasets[originalIndex];
-                })}
+                }) : []}
                 timeView={timeView} 
                 colorPeriods={colorPeriods}
               />

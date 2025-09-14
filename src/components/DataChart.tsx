@@ -33,7 +33,8 @@ interface DataChartProps {
 }
 
 export const DataChart: React.FC<DataChartProps> = ({ datasets, timeView, colorPeriods }) => {
-  if (!datasets || datasets.length === 0 || datasets.every(d => !d || !d.data || !Array.isArray(d.data) || d.data.length === 0)) {
+  // Add comprehensive safety checks
+  if (!datasets || !Array.isArray(datasets) || datasets.length === 0 || datasets.every(d => !d || !d.data || !Array.isArray(d.data) || d.data.length === 0)) {
     return (
       <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
         <div className="text-center text-gray-500">
@@ -63,10 +64,11 @@ export const DataChart: React.FC<DataChartProps> = ({ datasets, timeView, colorP
 
   // Get all unique dates from all datasets
   const allDates = Array.from(
-    new Set(datasets
-      .filter(d => d && d.data && Array.isArray(d.data))
-      .flatMap(d => d.data.map(point => point && point.date ? point.date : ''))
-      .filter(date => date !== '')
+    new Set(
+      datasets
+        .filter(d => d && d.data && Array.isArray(d.data))
+        .flatMap(d => d.data.map(point => point && point.date ? point.date : ''))
+        .filter(date => date !== '')
     )
   ).sort();
 
